@@ -29,7 +29,12 @@ RIBA.Settings.Response = function ()
         Networking.Receive("SettingsRequestMSG", function(message, client)
             RIBA.Settings.File = json.parse(File.Read(RIBA.Path .. "/Lua/settings.json"))
             local netMsg = Networking.Start("SettingsResponseMSG");
-            netMsg.WriteInt16(#RIBA.Settings.File)
+            local count = 0
+            for k, v in pairs(RIBA.Settings.File) do
+                count = count+1
+            end
+            netMsg.WriteInt16(count)
+            print(count)
             for key, value in pairs(RIBA.Settings.File) do
                 netMsg.WriteString(tostring(key))
                 netMsg.WriteBoolean(value==true)
@@ -56,11 +61,11 @@ end
 
 RIBA.Settings.Update = function (callback)
     -- RIBA.Settings.ReadJSON()
+    RIBA.Settings.Listen(callback)
     RIBA.Settings.Request()
     RIBA.Settings.Response()
-    RIBA.Settings.Listen(callback)
 end
 
 RIBA.Settings.Check = function (option)
-    return RIBA.Settings.Local[option]
+    return RIBA.Settings.Local[option]==true
 end

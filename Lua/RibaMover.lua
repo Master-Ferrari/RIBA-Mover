@@ -279,7 +279,7 @@ end
 
 Hook.Add("RIBAMover", "RIBAMover", function(statusEffect, delta, item)
     RIBA.Settings.Update(function()
-        for key,value in pairs(RIBA.Settings.File) do
+        for key,value in pairs(RIBA.Settings.Local) do
             print(tostring(key).." "..tostring(RIBA.Settings.Local[key]))
         end
     end)
