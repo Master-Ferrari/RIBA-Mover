@@ -40,3 +40,20 @@ RIBA.GetAttributeValueFromItemHead = function(item, targetAttribute)
     end)
     return success and result or nil
 end
+
+RIBA.CalculateDistance = function(frst, scnd)
+    local dx = scnd[1] - frst[1]
+    local dy = scnd[2] - frst[2]
+    local distance = math.sqrt(dx^2 + dy^2)
+    return distance
+end
+
+RIBA.FindClientCharacter = function(character)
+    if CLIENT then return nil end
+    
+    for key, value in pairs(Client.ClientList) do
+        if value.Character == character then
+            return value
+        end
+    end
+end

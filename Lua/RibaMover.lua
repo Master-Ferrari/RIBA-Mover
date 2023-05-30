@@ -1,18 +1,31 @@
 RIBA.EditableCheck = function(Item)
-    if RIBA.Settings.Check("EditNotAttachableItems") then
-        return true
-    else
+    
+    if not RIBA.Settings.Check("EditNotAttachableItems") then
         local attachable = RIBA.GetAttributeValueFromItem(Item, "Holdable", "attachable")=="true"
         if attachable then
-            local attached = RIBA.Component(Item, "Holdable").Attached
-            if attached then
-                return true
+            print("You can't interact with "..tostring(Item.Name).." because this item not detachable.")
+            print("This restriction can be disabled with the console command \"ribamover\" or in the host's settings.json")
+            return false
+            -- local attached = RIBA.Component(Item, "Holdable").Attached
+            -- if attached then
+            --     return true
+            -- end
+        end
+    end
+
+    if not RIBA.Settings.Check("EditMachines") then
+        local isMachine = RIBA.GetAttributeValueFromItemHead(Item,"category")
+        isMachine = RIBA.removePrefixAndSuffix(isMachine, '"', '"')
+        for word in isMachine:gmatch(",") do
+            if word == "Machine" then
+                print("You can't interact with "..tostring(Item.Name).." because it is Machine category item.")
+                print("This restriction can be disabled with the console command \"ribamover\" or in the host's settings.json")
+                return false
             end
         end
     end
-    print("Item "..tostring(Item.Name).." not detachable.")
-    print("This restriction can be disabled in settings.json in Riba Mover folder.")
-    return false
+
+    return true
 end
 
 
@@ -126,20 +139,21 @@ else
     local frame = GUI.Frame(GUI.RectTransform(Vector2(1, 1)), nil)  --ваще весь экран
     frame.CanBeFocused = false
 
+    MainMenu = GUI.Frame(GUI.RectTransform(Vector2(1, 1), frame.RectTransform, GUI.Anchor.Center), nil)  --наш слой на экране
+    MainMenu.CanBeFocused = false
+    MainMenu.Visible = false
+
     RIBA.decoratorUI = function(FocusedItem)
         -- menu frame
-        local menu = GUI.Frame(GUI.RectTransform(Vector2(1, 1), frame.RectTransform, GUI.Anchor.Center), nil)  --наш слой на экране
-        menu.CanBeFocused = false
-        menu.Visible = false
 
         -- put a button that goes behind the menu content, so we can close it when we click outside
-        local closeButton = GUI.Button(GUI.RectTransform(Vector2(1, 1), menu.RectTransform, GUI.Anchor.Center), "", GUI.Alignment.Center, nil)  --кнопка закрыть всё
+        local closeButton = GUI.Button(GUI.RectTransform(Vector2(1, 1), MainMenu.RectTransform, GUI.Anchor.Center), "", GUI.Alignment.Center, nil)  --кнопка закрыть всё
         closeButton.OnClicked = function ()
-            menu.Visible = not menu.Visible
+            MainMenu.Visible = not MainMenu.Visible
         end
 
 
-        local menuContent = GUI.Frame(GUI.RectTransform(Vector2(0.18, 0.115), menu.RectTransform, GUI.Anchor.BottomCenter))
+        local menuContent = GUI.Frame(GUI.RectTransform(Vector2(0.18, 0.115), MainMenu.RectTransform, GUI.Anchor.BottomCenter))
 
         menuContent.RectTransform.RelativeOffset = Vector2(0, 0.1)
 
@@ -267,7 +281,7 @@ else
             end
         end
 
-        menu.Visible = true
+        MainMenu.Visible = true
     end
 
 
@@ -277,7 +291,7 @@ else
 
 end
 
-Hook.Add("RIBAMover", "RIBAMover", function(statusEffect, delta, item)
+Hook.Add("RIBAMoverOnUse", "RIBAMoverOnUse", function(statusEffect, delta, item)
     RIBA.Settings.Update(function()
 
         if CLIENT then
@@ -291,6 +305,19 @@ Hook.Add("RIBAMover", "RIBAMover", function(statusEffect, delta, item)
         end
 
     end)
+    
+end)
+
+Hook.Add("RIBAMoverAlways", "RIBAMoverAlways", function(item)
+    -- RIBA.Settings.Update(function()
+        -- local distanse = RIBA.CalculateDistance(FocusedItem.WorldPosition, Character.WorldPosition)
+        -- print(distanse)
+        charact = RIBA.FindClientCharacter(item.ParentInventory.Owner)
+        print(charact.WorldPosition)
+        if distanse>20.0 then
+            MainMenu.Visible = false
+        end   
+    -- end)
     
 end)
 

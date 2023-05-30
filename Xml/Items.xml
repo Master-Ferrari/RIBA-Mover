@@ -19,7 +19,10 @@
         <Explosion range="150.0" force="1.5" shockwave="false" smoke="false" flames="false" sparks="false" underwaterbubble="false" camerashake="6.0" />
       </StatusEffect>
       <StatusEffect type="OnUse" target="Character">
-        <LuaHook name="RIBAMover" />
+        <LuaHook name="RIBAMoverOnUse" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="Character">
+        <LuaHook name="RIBAMoverAlways" />
       </StatusEffect>
     </RangedWeapon>
 	
