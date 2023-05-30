@@ -1,8 +1,8 @@
 {
-  "EditNotAttachableItems":false,
-  "EditMachines":false,
+  "EditNotAttachableItems":true,
+  "EditMachines":true,
   "Rotation":true,
   "ChangeOfDepth":true,
   "Flipping":true,
-  "Movement":false
+  "Movement":true
 }

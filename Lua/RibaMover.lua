@@ -70,7 +70,7 @@ else
                 Networking.Send(netMsg)
             end
             FocusedItem.Rotation = value
-            print(value)
+            -- print(value)
         end
     end
 
@@ -83,7 +83,7 @@ else
                 netMsg.WriteInt16(newSpriteDepth)
                 Networking.Send(netMsg)
             end
-            print(newSpriteDepth)
+            -- print(newSpriteDepth)
             FocusedItem.SpriteDepth = newSpriteDepth
         end
     end
@@ -279,20 +279,22 @@ end
 
 Hook.Add("RIBAMover", "RIBAMover", function(statusEffect, delta, item)
     RIBA.Settings.Update(function()
-        for key,value in pairs(RIBA.Settings.Local) do
-            print(tostring(key).." "..tostring(RIBA.Settings.Local[key]))
+        -- for key,value in pairs(RIBA.Settings.Local) do
+        --     print(tostring(key).." "..tostring(RIBA.Settings.Local[key]))
+        -- end
+
+        if CLIENT then
+            print ("I AM CLIENT!")
+    
+            FocusedItem = Character.Controlled.FocusedItem
+        
+            if FocusedItem~=nil and RIBA.EditableCheck(FocusedItem) then
+                RIBA.decoratorUI(FocusedItem)
+            end
         end
+
     end)
     
-    if CLIENT then
-        print ("I AM CLIENT!")
-
-        FocusedItem = Character.Controlled.FocusedItem
-    
-        if FocusedItem~=nil and RIBA.EditableCheck(FocusedItem) then
-            RIBA.decoratorUI(FocusedItem)
-        end
-    end
 
 
 
