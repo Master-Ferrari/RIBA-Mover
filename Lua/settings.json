@@ -1,1 +1,1 @@
-{"EditNotAttachableItems":true,"EditMachines":true,"Rotation":false,"ChangeOfDepth":true,"Flipping":true,"Movement":true}
+{"EditNotAttachableItems":true,"EditMachines":false,"EditLadders":false,"EditDoors":false,"Rotation":true,"ChangeOfDepth":true,"Flipping":true,"Movement":true}

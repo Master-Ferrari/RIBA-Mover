@@ -55,7 +55,7 @@ if CLIENT then
 end
 
 RIBA.Settings.Update = function (callback)
-    if (Game.IsSingleplayer) then
+    if Game.IsSingleplayer or SERVER then
         RIBA.Settings.ReadJSON()
         callback()
     else

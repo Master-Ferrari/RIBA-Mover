@@ -1,6 +1,6 @@
-local ValidArguments = {"EditNotAttachableItems","EditMachines","Rotation","ChangeOfDepth","Flipping","Movement"}
+local ValidArguments = {"EditNotAttachableItems","EditMachines","EditDoors","EditLadders","Rotation","ChangeOfDepth","Flipping","Movement"}
 
-Game.AddCommand("ribamover", "[".. table.concat(ValidArguments, "/") .."] [true/false]", function (args)
+Game.AddCommand("ribamoverset", "[option] [true/false] . Options: ".. table.concat(ValidArguments, ", ") ..".", function (args)
 
     if args[2] ~= "false" and args[2] ~= "true" then
         print("bad arguments")
@@ -20,3 +20,11 @@ Game.AddCommand("ribamover", "[".. table.concat(ValidArguments, "/") .."] [true/
     
     -- sender.HasPermission(0x80)
 end, function() return {ValidArguments} end)
+
+Game.AddCommand("ribamoverlist", "Shows the current settings of the RIBA Mover.", function (args)
+    RIBA.Settings.Update(function()
+        for k,v in pairs(RIBA.Settings.Local)do
+            print(tostring(k).." is "..tostring(v))
+        end
+    end)
+end)

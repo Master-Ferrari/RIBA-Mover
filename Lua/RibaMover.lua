@@ -1,29 +1,51 @@
+local FocusedItem
+
+local EditableErrorPrint = function (Item,string)
+    print("You can't interact with "..tostring(Item.Name).." because "..string..".")
+    print("This restriction can be disabled with the console command \"ribamoverset\" or in the host's settings.json")
+end
+
 RIBA.EditableCheck = function(Item)
     
     if not RIBA.Settings.Check("EditNotAttachableItems") then
-        local attachable = RIBA.GetAttributeValueFromItem(Item, "Holdable", "attachable")=="true"
-        if attachable then
-            print("You can't interact with "..tostring(Item.Name).." because this item not detachable.")
-            print("This restriction can be disabled with the console command \"ribamover\" or in the host's settings.json")
+        local isAttachable = RIBA.GetAttributeValueFromItem(Item, "Holdable", "attachable")=="true"
+        if isAttachable then
+            EditableErrorPrint(Item, "this item not detachable")
             return false
-            -- local attached = RIBA.Component(Item, "Holdable").Attached
-            -- if attached then
-            --     return true
-            -- end
         end
     end
 
     if not RIBA.Settings.Check("EditMachines") then
-        local isMachine = RIBA.GetAttributeValueFromItemHead(Item,"category")
-        isMachine = RIBA.removePrefixAndSuffix(isMachine, '"', '"')
-        for word in isMachine:gmatch(",") do
-            if word == "Machine" then
-                print("You can't interact with "..tostring(Item.Name).." because it is Machine category item.")
-                print("This restriction can be disabled with the console command \"ribamover\" or in the host's settings.json")
-                return false
+        local CategoryNames = RIBA.GetCategoryNames(Item)
+        local isMachine = false
+        for k,v in pairs(CategoryNames) do
+            if v == "Machine" then
+                isMachine = true
+                break
             end
         end
+        if isMachine then
+            EditableErrorPrint(Item, "it is Machine category item")
+            return false
+        end
     end
+
+    if not RIBA.Settings.Check("EditLadders") then
+        local isLadder = Item.IsLadder
+        if isLadder then
+            EditableErrorPrint(Item, "it is Ladder")
+            return false
+        end
+    end
+
+    if not RIBA.Settings.Check("EditDoors") then
+        local isLadder = RIBA.Component(Item,"Door")~=nil
+        if isLadder then
+            EditableErrorPrint(Item, "it is Door")
+            return false
+        end
+    end
+
 
     return true
 end
@@ -302,22 +324,26 @@ Hook.Add("RIBAMoverOnUse", "RIBAMoverOnUse", function(statusEffect, delta, item)
             if FocusedItem~=nil and RIBA.EditableCheck(FocusedItem) then
                 RIBA.decoratorUI(FocusedItem)
             end
+        else
+            
+            FocusedItem = Character.Controlled.FocusedItem
+            print(FocusedItem.WorldPosition)
         end
 
     end)
     
 end)
 
-Hook.Add("RIBAMoverAlways", "RIBAMoverAlways", function(item)
-    -- RIBA.Settings.Update(function()
-        -- local distanse = RIBA.CalculateDistance(FocusedItem.WorldPosition, Character.WorldPosition)
-        -- print(distanse)
-        charact = RIBA.FindClientCharacter(item.ParentInventory.Owner)
-        print(charact.WorldPosition)
-        if distanse>20.0 then
-            MainMenu.Visible = false
-        end   
-    -- end)
-    
+-- Hook.Add("RIBAMoverAlways", "RIBAMoverAlways", function(item)
+--         print(tostring(FocusedItem.WorldPosition))
+-- end)
+
+Hook.Add("RIBAMoverAlways", "RIBAMoverAlways", function(effect, deltaTime, item, targets, worldPosition)
+    if SERVER then
+        -- print(item)
+        
+        -- print(item.WorldPosition)
+        
+    end
 end)
 

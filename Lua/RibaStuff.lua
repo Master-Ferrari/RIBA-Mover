@@ -4,6 +4,7 @@ RIBA.Component = function(item, name)
             return component
         end
     end
+    return nil
 end
 
 RIBA.removePrefixAndSuffix = function(input, prefix, suffix)
@@ -16,12 +17,12 @@ RIBA.removePrefixAndSuffix = function(input, prefix, suffix)
                 return string.sub(input, startIdx, endIdx - 1)
             end
         end
-        return nil
+        return ""
     end)
     if success then
         return result
     else
-        return nil
+        return ""
     end
 end
 
@@ -33,13 +34,13 @@ RIBA.GetAttributeValueFromItem = function(item, targetElement, targetAttribute)
     return success and result or nil
 end
 
-RIBA.GetAttributeValueFromItemHead = function(item, targetAttribute)
-    local success, result = pcall(function()
-        local AttributeString = tostring(item.Prefab.GetAttribute(tostring(targetAttribute)))
-        return RIBA.removePrefixAndSuffix(AttributeString, '"', '"')
-    end)
-    return success and result or nil
-end
+-- RIBA.GetAttributeValueFromItemHead = function(item, targetAttribute)
+--     -- local success, result = pcall(function()
+--         local AttributeString = tostring(item.Prefab.originalElement.GetAttribute(tostring(targetAttribute)))
+--         return RIBA.removePrefixAndSuffix(AttributeString, '"', '"')
+--     -- end)
+--     -- return success and result or nil
+-- end
 
 RIBA.CalculateDistance = function(frst, scnd)
     local dx = scnd[1] - frst[1]
@@ -56,4 +57,61 @@ RIBA.FindClientCharacter = function(character)
             return value
         end
     end
+end
+
+RIBA.SplitString = function (inputString, delimiter)
+    local result = {}  -- Результирующая таблица строк
+    local startIndex = 1
+    local endIndex = 0
+
+    while true do
+        endIndex = string.find(inputString, delimiter, startIndex) -- Находим индекс разделителя
+
+        if endIndex == nil then  -- Если разделитель не найден, добавляем оставшуюся часть строки в результат
+            table.insert(result, string.sub(inputString, startIndex))
+            break
+        end
+
+        local substring = string.sub(inputString, startIndex, endIndex - 1) -- Выделяем подстроку до разделителя
+        table.insert(result, substring) -- Добавляем подстроку в результат
+        startIndex = endIndex + string.len(delimiter) -- Обновляем начальный индекс для следующей итерации
+    end
+
+    return result
+end
+
+RIBA.GetCategoryNames = function(item)
+    
+    local sum = math.floor(item.Prefab.category)
+    local categoryNames = {}
+
+    if sum == 0 then
+        table.insert(categoryNames, "None")
+    else
+        local categories = {
+            { name = "Structure", value = 1 },
+            { name = "Decorative", value = 2 },
+            { name = "Machine", value = 4 },
+            { name = "Medical", value = 8 },
+            { name = "Weapon", value = 16 },
+            { name = "Diving", value = 32 },
+            { name = "Equipment", value = 64 },
+            { name = "Fuel", value = 128 },
+            { name = "Electrical", value = 256 },
+            { name = "Material", value = 1024 },
+            { name = "Alien", value = 2048 },
+            { name = "Wrecked", value = 4096 },
+            { name = "ItemAssembly", value = 8192 },
+            { name = "Legacy", value = 16384 },
+            { name = "Misc", value = 32768 }
+        }
+
+        for _, category in ipairs(categories) do
+            if bit32.band(sum, category.value) ~= 0 then
+                table.insert(categoryNames, category.name)
+            end
+        end
+    end
+
+    return categoryNames
 end
