@@ -279,12 +279,9 @@ end
 
 Hook.Add("RIBAMover", "RIBAMover", function(statusEffect, delta, item)
     RIBA.Settings.Update(function()
-        -- for key,value in pairs(RIBA.Settings.Local) do
-        --     print(tostring(key).." "..tostring(RIBA.Settings.Local[key]))
-        -- end
 
         if CLIENT then
-            print ("I AM CLIENT!")
+            -- print ("I AM CLIENT!")
     
             FocusedItem = Character.Controlled.FocusedItem
         
@@ -295,9 +292,5 @@ Hook.Add("RIBAMover", "RIBAMover", function(statusEffect, delta, item)
 
     end)
     
-
-
-
-
 end)
 
