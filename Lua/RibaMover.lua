@@ -338,11 +338,60 @@ end)
 --         print(tostring(FocusedItem.WorldPosition))
 -- end)
 
+
+
+
+
+
+
+
+
+
+
+
+
+if SERVER then
+    function FocusedItemRequestMSG()
+        local netMsg = Networking.Start("FocusedItemRequestMSG");
+        Networking.Send(netMsg)
+    end
+end
+
+if CLIENT then
+    Hook.Add("loaded", "FocusedItemRequestMSG", function()
+        Networking.Receive("FocusedItemRequestMSG", function(msg, sender)
+            local netMsg = Networking.Start("FocusedItemResponseMSG");
+            netMsg.WriteString(tostring(FocusedItem.ID))
+            Networking.Send(netMsg)
+        end)
+    end)
+end
+
+local FocusedItemCallback = function () end
+
+if SERVER then
+    Hook.Add("loaded", "FocusedItemResponseMSG", function()
+        Networking.Receive("FocusedItemResponseMSG", function(msg, sender)
+            local FocusedItem = Entity.FindEntityByID(tonumber(msg.ReadString()))
+            FocusedItemCallback()
+        end)
+    end)
+end
+
+
+
+
+
 Hook.Add("RIBAMoverAlways", "RIBAMoverAlways", function(effect, deltaTime, item, targets, worldPosition)
     if SERVER then
-        -- print(item)
         
-        -- print(item.WorldPosition)
+        FocusedItemRequestMSG()
+        FocusedItemCallback = function ()
+            local owner = item.ParentInventory.Owner
+            print(owner.WorldPosition)
+            print(FocusedItem)
+            print(FocusedItem.WorldPosition)
+        end
         
     end
 end)
