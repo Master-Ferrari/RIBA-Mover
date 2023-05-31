@@ -43,8 +43,8 @@ end
 -- end
 
 RIBA.CalculateDistance = function(frst, scnd)
-    local dx = scnd[1] - frst[1]
-    local dy = scnd[2] - frst[2]
+    local dx = scnd.x - frst.x
+    local dy = scnd.y - frst.y
     local distance = math.sqrt(dx^2 + dy^2)
     return distance
 end

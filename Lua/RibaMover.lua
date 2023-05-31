@@ -105,7 +105,6 @@ else
                 Networking.Send(netMsg)
             end
             FocusedItem.Rotation = value
-            -- print(value)
         end
     end
 
@@ -118,42 +117,41 @@ else
                 netMsg.WriteInt16(newSpriteDepth)
                 Networking.Send(netMsg)
             end
-            -- print(newSpriteDepth)
             FocusedItem.SpriteDepth = newSpriteDepth
         end
     end
 
     RIBA.moveAttached = function(H, V, Item)
-                if (Game.IsSingleplayer) then
-                    Item.Move(Vector2(H, V), false)
-                else
-                    local netMsg = Networking.Start("MoveMSG");
-                    netMsg.WriteString(tostring(Item.ID))
-                    netMsg.WriteInt16(H)
-                    netMsg.WriteInt16(V)
-                    Networking.Send(netMsg)
-                    Item.Move(Vector2(H, V), false)
-                end
+        if (Game.IsSingleplayer) then
+            Item.Move(Vector2(H, V), false)
+        else
+            local netMsg = Networking.Start("MoveMSG");
+            netMsg.WriteString(tostring(Item.ID))
+            netMsg.WriteInt16(H)
+            netMsg.WriteInt16(V)
+            Networking.Send(netMsg)
+            Item.Move(Vector2(H, V), false)
+        end
     end
 
     RIBA.flipAttached = function(X, Item)
-                if (Game.IsSingleplayer) then
-                    if X then
-                        Item.FlipX(false)
-                    else
-                        Item.FlipY(false)
-                    end
-                else
-                    local netMsg = Networking.Start("FlipMSG");
-                    netMsg.WriteString(tostring(Item.ID))
-                    netMsg.WriteBoolean(X)
-                    Networking.Send(netMsg)
-                    if X then
-                        Item.FlipX(false)
-                    else
-                        Item.FlipY(false)
-                    end
-                end
+        if (Game.IsSingleplayer) then
+            if X then
+                Item.FlipX(false)
+            else
+                Item.FlipY(false)
+            end
+        else
+            local netMsg = Networking.Start("FlipMSG");
+            netMsg.WriteString(tostring(Item.ID))
+            netMsg.WriteBoolean(X)
+            Networking.Send(netMsg)
+            if X then
+                Item.FlipX(false)
+            else
+                Item.FlipY(false)
+            end
+        end
     end
 
 
@@ -302,97 +300,36 @@ else
                 RIBA.moveAttached(0,-1,FocusedItem)
             end
         end
-
         MainMenu.Visible = true
     end
-
 
     Hook.Patch("Barotrauma.GameScreen", "AddToGUIUpdateList", function()
         frame.AddToGUIUpdateList()
     end)
 
+
+
+
+    Hook.Add("RIBAMoverAlways", "RIBAMoverAlways", function(effect, deltaTime, item, targets, worldPosition) --отключить если далеко
+        if FocusedItem~=nil and MainMenu.Visible then
+            local owner = item.ParentInventory.Owner
+            local distance = RIBA.CalculateDistance(owner.WorldPosition, FocusedItem.WorldPosition)
+            if distance > 200 then
+                MainMenu.Visible = false
+            end
+        end
+    end)
+
 end
 
-Hook.Add("RIBAMoverOnUse", "RIBAMoverOnUse", function(statusEffect, delta, item)
+Hook.Add("RIBAMoverOnUse", "RIBAMoverOnUse", function(statusEffect, delta, item) --включить интерфейс
     RIBA.Settings.Update(function()
-
         if CLIENT then
-            -- print ("I AM CLIENT!")
-    
             FocusedItem = Character.Controlled.FocusedItem
-        
             if FocusedItem~=nil and RIBA.EditableCheck(FocusedItem) then
                 RIBA.decoratorUI(FocusedItem)
             end
-        else
-            
-            FocusedItem = Character.Controlled.FocusedItem
-            print(FocusedItem.WorldPosition)
         end
-
     end)
-    
-end)
-
--- Hook.Add("RIBAMoverAlways", "RIBAMoverAlways", function(item)
---         print(tostring(FocusedItem.WorldPosition))
--- end)
-
-
-
-
-
-
-
-
-
-
-
-
-
-if SERVER then
-    function FocusedItemRequestMSG()
-        local netMsg = Networking.Start("FocusedItemRequestMSG");
-        Networking.Send(netMsg)
-    end
-end
-
-if CLIENT then
-    Hook.Add("loaded", "FocusedItemRequestMSG", function()
-        Networking.Receive("FocusedItemRequestMSG", function(msg, sender)
-            local netMsg = Networking.Start("FocusedItemResponseMSG");
-            netMsg.WriteString(tostring(FocusedItem.ID))
-            Networking.Send(netMsg)
-        end)
-    end)
-end
-
-local FocusedItemCallback = function () end
-
-if SERVER then
-    Hook.Add("loaded", "FocusedItemResponseMSG", function()
-        Networking.Receive("FocusedItemResponseMSG", function(msg, sender)
-            local FocusedItem = Entity.FindEntityByID(tonumber(msg.ReadString()))
-            FocusedItemCallback()
-        end)
-    end)
-end
-
-
-
-
-
-Hook.Add("RIBAMoverAlways", "RIBAMoverAlways", function(effect, deltaTime, item, targets, worldPosition)
-    if SERVER then
-        
-        FocusedItemRequestMSG()
-        FocusedItemCallback = function ()
-            local owner = item.ParentInventory.Owner
-            print(owner.WorldPosition)
-            print(FocusedItem)
-            print(FocusedItem.WorldPosition)
-        end
-        
-    end
 end)
 
