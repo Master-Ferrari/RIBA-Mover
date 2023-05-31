@@ -165,7 +165,7 @@ else
 
     RIBA.decoratorUI = function(FocusedItem)
         -- menu frame
-
+        MainMenu.ClearChildren()
         -- put a button that goes behind the menu content, so we can close it when we click outside
         local closeButton = GUI.Button(GUI.RectTransform(Vector2(1, 1), MainMenu.RectTransform, GUI.Anchor.Center), "", GUI.Alignment.Center, nil)  --кнопка закрыть всё
         closeButton.OnClicked = function ()
@@ -319,11 +319,12 @@ else
                     end
                 end
                 local distance = RIBA.CalculateDistance(owner.WorldPosition, FocusedItem.WorldPosition)
+                
                 if distance > 200 or not isMoverInHands then
                     MainMenu.Visible = false
                 end
-            else
-                MainMenu.Visible = false
+            -- else
+            --     MainMenu.Visible = false
             end
         end
     end)
