@@ -172,7 +172,6 @@ else
             MainMenu.Visible = not MainMenu.Visible
         end
 
-
         local menuContent = GUI.Frame(GUI.RectTransform(Vector2(0.18, 0.115), MainMenu.RectTransform, GUI.Anchor.BottomCenter))
 
         menuContent.RectTransform.RelativeOffset = Vector2(0, 0.1)
@@ -308,23 +307,22 @@ else
     end)
 
 
-
-
     Hook.Add("RIBAMoverAlways", "RIBAMoverAlways", function(effect, deltaTime, item, targets, worldPosition) --отключить если далеко
         if FocusedItem~=nil and MainMenu.Visible then
 
-            local owner = item.ParentInventory.Owner or nil
-            
-            isMoverInHands = false
-            for k,v in owner.HeldItems do
-                if item.Prefab.Identifier.Value == k.Prefab.Identifier.Value then
-                    isMoverInHands = true
+            local owner = item.ParentInventory and item.ParentInventory.Owner
+            if owner~=nil then
+                isMoverInHands = false
+                for k,v in owner.HeldItems do
+                    if item.Prefab.Identifier.Value == k.Prefab.Identifier.Value then
+                        isMoverInHands = true
+                    end
                 end
-            end
-
-            local distance = RIBA.CalculateDistance(owner.WorldPosition, FocusedItem.WorldPosition)
-
-            if distance > 200 or not isMoverInHands then
+                local distance = RIBA.CalculateDistance(owner.WorldPosition, FocusedItem.WorldPosition)
+                if distance > 200 or not isMoverInHands then
+                    MainMenu.Visible = false
+                end
+            else
                 MainMenu.Visible = false
             end
         end
