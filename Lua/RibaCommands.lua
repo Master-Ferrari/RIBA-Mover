@@ -9,9 +9,9 @@ Game.AddCommand("ribamoverset", "[option] [true/false] . Options: ".. table.conc
 
     for _, validArg in pairs(ValidArguments) do
         if args[1] == validArg then
-            RIBA.Settings.ReadJSON()
-            RIBA.Settings.Local[tostring(args[1])] = args[2]=="true"
-            RIBA.Settings.WriteJSON()
+            RIBAMover.Settings.ReadJSON()
+            RIBAMover.Settings.Local[tostring(args[1])] = args[2]=="true"
+            RIBAMover.Settings.WriteJSON()
             print(args[1].." is "..args[2])
             return
         end
@@ -22,8 +22,8 @@ Game.AddCommand("ribamoverset", "[option] [true/false] . Options: ".. table.conc
 end, function() return {ValidArguments} end)
 
 Game.AddCommand("ribamoverlist", "Shows the current settings of the RIBA Mover.", function (args)
-    RIBA.Settings.Update(function()
-        for k,v in pairs(RIBA.Settings.Local)do
+    RIBAMover.Settings.Update(function()
+        for k,v in pairs(RIBAMover.Settings.Local)do
             print(tostring(k).." is "..tostring(v))
         end
     end)

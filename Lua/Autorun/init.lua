@@ -1,7 +1,7 @@
-RIBA = {}
-RIBA.Path = table.pack(...)[1]
+RIBAMover = {}
+RIBAMover.Path = table.pack(...)[1]
 
-dofile(RIBA.Path .. "/Lua/RibaStuff.lua")
-dofile(RIBA.Path .. "/Lua/RibaSettings.lua")
-dofile(RIBA.Path .. "/Lua/RibaCommands.lua")
-dofile(RIBA.Path .. "/Lua/RibaMover.lua")
+dofile(RIBAMover.Path .. "/Lua/RibaStuff.lua")
+dofile(RIBAMover.Path .. "/Lua/RibaSettings.lua")
+dofile(RIBAMover.Path .. "/Lua/RibaCommands.lua")
+dofile(RIBAMover.Path .. "/Lua/RibaMover.lua")

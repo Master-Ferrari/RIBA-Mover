@@ -1,4 +1,4 @@
-RIBA.Component = function(item, name)
+RIBAMover.Component = function(item, name)
     for _, component in ipairs(item.Components) do
         if component.Name == name then
             return component
@@ -7,7 +7,7 @@ RIBA.Component = function(item, name)
     return nil
 end
 
-RIBA.removePrefixAndSuffix = function(input, prefix, suffix)
+RIBAMover.removePrefixAndSuffix = function(input, prefix, suffix)
     local success, result = pcall(function()
         local startIdx = string.find(input, prefix)
         if startIdx then
@@ -26,10 +26,10 @@ RIBA.removePrefixAndSuffix = function(input, prefix, suffix)
     end
 end
 
-RIBA.GetAttributeValueFromItem = function(item, targetElement, targetAttribute)
+RIBAMover.GetAttributeValueFromItem = function(item, targetElement, targetAttribute)
     local success, result = pcall(function()
-        local AttributeString = tostring(RIBA.Component(item,targetElement).originalElement.GetAttribute(tostring(targetAttribute)))
-        return RIBA.removePrefixAndSuffix(AttributeString, '"', '"')
+        local AttributeString = tostring(RIBAMover.Component(item,targetElement).originalElement.GetAttribute(tostring(targetAttribute)))
+        return RIBAMover.removePrefixAndSuffix(AttributeString, '"', '"')
     end)
     return success and result or nil
 end
@@ -42,14 +42,14 @@ end
 --     -- return success and result or nil
 -- end
 
-RIBA.CalculateDistance = function(frst, scnd)
+RIBAMover.CalculateDistance = function(frst, scnd)
     local dx = scnd.x - frst.x
     local dy = scnd.y - frst.y
     local distance = math.sqrt(dx^2 + dy^2)
     return distance
 end
 
-RIBA.FindClientCharacter = function(character)
+RIBAMover.FindClientCharacter = function(character)
     if CLIENT then return nil end
     
     for key, value in pairs(Client.ClientList) do
@@ -59,7 +59,7 @@ RIBA.FindClientCharacter = function(character)
     end
 end
 
-RIBA.SplitString = function (inputString, delimiter)
+RIBAMover.SplitString = function (inputString, delimiter)
     local result = {}  -- Результирующая таблица строк
     local startIndex = 1
     local endIndex = 0
@@ -80,7 +80,7 @@ RIBA.SplitString = function (inputString, delimiter)
     return result
 end
 
-RIBA.GetCategoryNames = function(item)
+RIBAMover.GetCategoryNames = function(item)
     
     local sum = math.floor(item.Prefab.category)
     local categoryNames = {}

@@ -5,18 +5,18 @@ local EditableErrorPrint = function (Item,string)
     print("This restriction can be disabled with the console command \"ribamoverset\" or in the host's settings.json")
 end
 
-RIBA.EditableCheck = function(Item)
+RIBAMover.EditableCheck = function(Item)
     
-    if not RIBA.Settings.Check("EditNotAttachableItems") then
-        local isAttachable = RIBA.GetAttributeValueFromItem(Item, "Holdable", "attachable")=="true"
+    if not RIBAMover.Settings.Check("EditNotAttachableItems") then
+        local isAttachable = RIBAMover.GetAttributeValueFromItem(Item, "Holdable", "attachable")=="true"
         if isAttachable then
             EditableErrorPrint(Item, "this item not detachable")
             return false
         end
     end
 
-    if not RIBA.Settings.Check("EditMachines") then
-        local CategoryNames = RIBA.GetCategoryNames(Item)
+    if not RIBAMover.Settings.Check("EditMachines") then
+        local CategoryNames = RIBAMover.GetCategoryNames(Item)
         local isMachine = false
         for k,v in pairs(CategoryNames) do
             if v == "Machine" then
@@ -30,7 +30,7 @@ RIBA.EditableCheck = function(Item)
         end
     end
 
-    if not RIBA.Settings.Check("EditLadders") then
+    if not RIBAMover.Settings.Check("EditLadders") then
         local isLadder = Item.IsLadder
         if isLadder then
             EditableErrorPrint(Item, "it is Ladder")
@@ -38,8 +38,8 @@ RIBA.EditableCheck = function(Item)
         end
     end
 
-    if not RIBA.Settings.Check("EditDoors") then
-        local isLadder = RIBA.Component(Item,"Door")~=nil
+    if not RIBAMover.Settings.Check("EditDoors") then
+        local isLadder = RIBAMover.Component(Item,"Door")~=nil
         if isLadder then
             EditableErrorPrint(Item, "it is Door")
             return false
@@ -96,7 +96,7 @@ if SERVER then
 
 else
 
-    RIBA.RotateAttached = function(value, Item)
+    RIBAMover.RotateAttached = function(value, Item)
         if true then
             if (not Game.IsSingleplayer) then
                 local netMsg = Networking.Start("RotateMSG");
@@ -108,7 +108,7 @@ else
         end
     end
 
-    RIBA.DepthAttached = function(value, Item)
+    RIBAMover.DepthAttached = function(value, Item)
         if true then
             local newSpriteDepth = math.round(value/1000.0, 3)
             if (not Game.IsSingleplayer) then
@@ -121,7 +121,7 @@ else
         end
     end
 
-    RIBA.moveAttached = function(H, V, Item)
+    RIBAMover.moveAttached = function(H, V, Item)
         if (Game.IsSingleplayer) then
             Item.Move(Vector2(H, V), false)
         else
@@ -134,7 +134,7 @@ else
         end
     end
 
-    RIBA.flipAttached = function(X, Item)
+    RIBAMover.flipAttached = function(X, Item)
         if (Game.IsSingleplayer) then
             if X then
                 Item.FlipX(false)
@@ -163,7 +163,7 @@ else
     MainMenu.CanBeFocused = false
     MainMenu.Visible = false
 
-    RIBA.decoratorUI = function(FocusedItem)
+    RIBAMover.decoratorUI = function(FocusedItem)
         -- menu frame
         MainMenu.ClearChildren()
         -- put a button that goes behind the menu content, so we can close it when we click outside
@@ -205,8 +205,8 @@ else
         menuHVH0.PadBottom = false
         menuHVH0.CanBeFocused = false
 
-        if RIBA.Settings.Check("ChangeOfDepth") then
-            local depthInput = GUI.NumberInput(GUI.RectTransform(Vector2(RIBA.Settings.Check("Rotation") and 0.46 or 0.95, 0.5), menuHVH0.Content.RectTransform), NumberType.Int) -- крутилка
+        if RIBAMover.Settings.Check("ChangeOfDepth") then
+            local depthInput = GUI.NumberInput(GUI.RectTransform(Vector2(RIBAMover.Settings.Check("Rotation") and 0.46 or 0.95, 0.5), menuHVH0.Content.RectTransform), NumberType.Int) -- крутилка
             depthInput.MinValueInt = 001
             depthInput.MaxValueInt = 899
             depthInput.valueStep = 10
@@ -215,11 +215,11 @@ else
                 depthInput.IntValue = depthInt
             end
             depthInput.OnValueChanged = function ()
-                RIBA.DepthAttached(depthInput.IntValue, FocusedItem)
+                RIBAMover.DepthAttached(depthInput.IntValue, FocusedItem)
             end
         end
-        if RIBA.Settings.Check("Rotation") then
-            local degreesInput = GUI.NumberInput(GUI.RectTransform(Vector2(RIBA.Settings.Check("ChangeOfDepth") and 0.46 or 0.95, 0.4), menuHVH0.Content.RectTransform), NumberType.Int) -- крутилка
+        if RIBAMover.Settings.Check("Rotation") then
+            local degreesInput = GUI.NumberInput(GUI.RectTransform(Vector2(RIBAMover.Settings.Check("ChangeOfDepth") and 0.46 or 0.95, 0.4), menuHVH0.Content.RectTransform), NumberType.Int) -- крутилка
             degreesInput.MinValueInt = 000
             degreesInput.MaxValueInt = 360
             degreesInput.valueStep = 1
@@ -228,11 +228,11 @@ else
                 degreesInput.IntValue = degreesInt
             end
             degreesInput.OnValueChanged = function ()
-                RIBA.RotateAttached(degreesInput.IntValue, FocusedItem)
+                RIBAMover.RotateAttached(degreesInput.IntValue, FocusedItem)
             end
         end
 
-        if RIBA.Settings.Check("Flipping") then
+        if RIBAMover.Settings.Check("Flipping") then
             --Отражалки
             local menuHVH1 = GUI.ListBox(GUI.RectTransform(Vector2(0.95, 0.2), menuHV.Content.RectTransform, GUI.Anchor.TopCenter), true, Color(0,0,0,0), nil) -- содержимое вертикаль
             menuHVH1.Color = Color(0,0,0,0)
@@ -242,15 +242,15 @@ else
 
             local FlipXButton = GUI.Button(GUI.RectTransform(Vector2(0.5, 1), menuHVH1.Content.RectTransform), "FlipX", GUI.Alignment.Center, "GUIButtonSmall")
             FlipXButton.OnClicked = function ()
-                RIBA.flipAttached(true, FocusedItem)
+                RIBAMover.flipAttached(true, FocusedItem)
             end
             local FlipXButton = GUI.Button(GUI.RectTransform(Vector2(0.5, 1), menuHVH1.Content.RectTransform), "FlipY", GUI.Alignment.Center, "GUIButtonSmall")
             FlipXButton.OnClicked = function ()
-                RIBA.flipAttached(false, FocusedItem)
+                RIBAMover.flipAttached(false, FocusedItem)
             end
         end
 
-        if RIBA.Settings.Check("Movement") then
+        if RIBAMover.Settings.Check("Movement") then
             --Большие кнопочки
             local menuHVH2 = GUI.ListBox(GUI.RectTransform(Vector2(0.95, 0.2), menuHV.Content.RectTransform, GUI.Anchor.TopCenter), true, Color(0,0,0,0), nil) -- содержимое вертикаль
             menuHVH2.Color = Color(0,0,0,0)
@@ -260,19 +260,19 @@ else
 
             local leftButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "L", GUI.Alignment.Center, "GUIButtonSmall")
             leftButton.OnClicked = function ()
-                RIBA.moveAttached(-10,0,FocusedItem)
+                RIBAMover.moveAttached(-10,0,FocusedItem)
             end
             local rightButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "R", GUI.Alignment.Center, "GUIButtonSmall")
             rightButton.OnClicked = function ()
-                RIBA.moveAttached(10,0,FocusedItem)
+                RIBAMover.moveAttached(10,0,FocusedItem)
             end
             local upButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "U", GUI.Alignment.Center, "GUIButtonSmall")
             upButton.OnClicked = function ()
-                RIBA.moveAttached(0,10,FocusedItem)
+                RIBAMover.moveAttached(0,10,FocusedItem)
             end
             local downButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "D", GUI.Alignment.Center, "GUIButtonSmall")
             downButton.OnClicked = function ()
-                RIBA.moveAttached(0,-10,FocusedItem)
+                RIBAMover.moveAttached(0,-10,FocusedItem)
             end
 
             --Маленькие кнопочки
@@ -284,19 +284,19 @@ else
 
             local leftButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "l", GUI.Alignment.Center, "GUIButtonSmall")
             leftButton.OnClicked = function ()
-                RIBA.moveAttached(-1,0,FocusedItem)
+                RIBAMover.moveAttached(-1,0,FocusedItem)
             end
             local rightButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "r", GUI.Alignment.Center, "GUIButtonSmall")
             rightButton.OnClicked = function ()
-                RIBA.moveAttached(1,0,FocusedItem)
+                RIBAMover.moveAttached(1,0,FocusedItem)
             end
             local upButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "u", GUI.Alignment.Center, "GUIButtonSmall")
             upButton.OnClicked = function ()
-                RIBA.moveAttached(0,1,FocusedItem)
+                RIBAMover.moveAttached(0,1,FocusedItem)
             end
             local downButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "d", GUI.Alignment.Center, "GUIButtonSmall")
             downButton.OnClicked = function ()
-                RIBA.moveAttached(0,-1,FocusedItem)
+                RIBAMover.moveAttached(0,-1,FocusedItem)
             end
         end
         MainMenu.Visible = true
@@ -318,7 +318,7 @@ else
                         isMoverInHands = true
                     end
                 end
-                local distance = RIBA.CalculateDistance(owner.WorldPosition, FocusedItem.WorldPosition)
+                local distance = RIBAMover.CalculateDistance(owner.WorldPosition, FocusedItem.WorldPosition)
                 
                 if distance > 200 or not isMoverInHands then
                     MainMenu.Visible = false
@@ -332,11 +332,11 @@ else
 end
 
 Hook.Add("RIBAMoverOnUse", "RIBAMoverOnUse", function(statusEffect, delta, item) --включить интерфейс
-    RIBA.Settings.Update(function()
+    RIBAMover.Settings.Update(function()
         if CLIENT then
             FocusedItem = Character.Controlled.FocusedItem
-            if FocusedItem~=nil and RIBA.EditableCheck(FocusedItem) then
-                RIBA.decoratorUI(FocusedItem)
+            if FocusedItem~=nil and RIBAMover.EditableCheck(FocusedItem) then
+                RIBAMover.decoratorUI(FocusedItem)
             end
         end
     end)
