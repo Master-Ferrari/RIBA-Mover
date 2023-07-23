@@ -276,23 +276,29 @@ else
             menuHVH2.Padding = Vector4(0, 0, 0, 0)
             menuHVH2.CanBeFocused = false
 
-            local leftButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "L", GUI.Alignment.Center, "GUIButtonSmall")
+            local leftButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform),
+                                          "L", GUI.Alignment.Center, "GUIButtonSmall")
             leftButton.OnClicked = function ()
-                RIBAMover.moveAttached(-10,0,FocusedItem)
+                RIBAMover.Shiz.Do("move", {tostring(FocusedItem.ID),-10,0})
+                -- RIBAMover.moveAttached(-10,0,FocusedItem)
             end
-            local rightButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "R", GUI.Alignment.Center, "GUIButtonSmall")
+            local rightButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform),
+                                           "R", GUI.Alignment.Center, "GUIButtonSmall")
             rightButton.OnClicked = function ()
-                RIBAMover.moveAttached(10,0,FocusedItem)
+                RIBAMover.Shiz.Do("move", {tostring(FocusedItem.ID),10,0})
+                -- RIBAMover.moveAttached(10,0,FocusedItem)
             end
             local upButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), 
                                         "U", GUI.Alignment.Center, "GUIButtonSmall")
             upButton.OnClicked = function ()
-                RIBAMover.moveAttached(0,10,FocusedItem)
+                RIBAMover.Shiz.Do("move", {tostring(FocusedItem.ID),0,10})
+                -- RIBAMover.moveAttached(0,10,FocusedItem)
             end
             local downButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), 
                                           "D", GUI.Alignment.Center, "GUIButtonSmall")
             downButton.OnClicked = function ()
-                RIBAMover.moveAttached(0,-10,FocusedItem)
+                RIBAMover.Shiz.Do("move", {tostring(FocusedItem.ID),0,-10})
+                -- RIBAMover.moveAttached(0,-10,FocusedItem)
             end
 
             --Маленькие кнопочки
@@ -351,7 +357,7 @@ else
 end
 
 Hook.Add("RIBAMoverOnUse", "RIBAMoverOnUse", function(statusEffect, delta, item) --включить интерфейс
-    if RIBAMover.ItemOwnerIsPlayer(item) then
+    if RIBAMover.ItemOwnerIsPlayer(item) or Game.IsSingleplayer then
         RIBAMover.Settings.Update(function()
             if CLIENT then
                 FocusedItem = Character.Controlled.FocusedItem
