@@ -115,3 +115,16 @@ RIBAMover.GetCategoryNames = function(item)
 
     return categoryNames
 end
+
+RIBAMover.ItemOwnerIsPlayer = function(item)
+    if CLIENT then
+        OwnerName = item.GetRootInventoryOwner().Name
+        for player in Client.ClientList do
+            if player.Name == OwnerName or player.SteamID == OwnerName then
+                -- print(player.Name.." - владелец")
+                return true
+            end
+        end
+    end
+    return false
+end

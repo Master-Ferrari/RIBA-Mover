@@ -2,7 +2,7 @@ RIBAMover.Settings = {}
 RIBAMover.Settings.Path = (RIBAMover.Path .. "/Lua/settings.json")
 RIBAMover.Settings.File = json.parse(File.Read(RIBAMover.Settings.Path))
 RIBAMover.Settings.Local = {}
-RIBAMover.Settings.Callback = function() print("fsdfsdf") end
+RIBAMover.Settings.Callback = function() print("J-j") end
 
 RIBAMover.Settings.WriteJSON = function()
     File.Write(RIBAMover.Settings.Path, json.serialize(RIBAMover.Settings.Local))
@@ -14,7 +14,7 @@ RIBAMover.Settings.ReadJSON = function ()
         RIBAMover.Settings.Local[key]=value==true
     end
 end
-
+--Request
 RIBAMover.Settings.Request = function ()
     if CLIENT then
         local netMsg = Networking.Start("SettingsRequestMSG");

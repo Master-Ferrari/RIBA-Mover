@@ -1,8 +1,8 @@
 local FocusedItem
 
 local EditableErrorPrint = function (Item,string)
-    print("You can't interact with "..tostring(Item.Name).." because "..string..".")
-    print("This restriction can be disabled with the console command \"ribamoverset\" or in the host's settings.json")
+    print("You can't interact with \""..tostring(Item.Name).."\" because "..string..".\n" ..
+          "This restriction can be disabled with the console command \"ribamoverset\" or in the host's settings.json")
 end
 
 RIBAMover.EditableCheck = function(Item)
@@ -42,6 +42,14 @@ RIBAMover.EditableCheck = function(Item)
         local isLadder = RIBAMover.Component(Item,"Door")~=nil
         if isLadder then
             EditableErrorPrint(Item, "it is Door")
+            return false
+        end
+    end
+
+    if not RIBAMover.Settings.Check("EditReactors") then
+        local isLadder = RIBAMover.Component(Item,"Reactor")~=nil
+        if isLadder then
+            EditableErrorPrint(Item, "it is Reactor")
             return false
         end
     end
@@ -167,7 +175,8 @@ else
         -- menu frame
         MainMenu.ClearChildren()
         -- put a button that goes behind the menu content, so we can close it when we click outside
-        local closeButton = GUI.Button(GUI.RectTransform(Vector2(1, 1), MainMenu.RectTransform, GUI.Anchor.Center), "", GUI.Alignment.Center, nil)  --кнопка закрыть всё
+        local closeButton = GUI.Button(GUI.RectTransform(Vector2(1, 1), MainMenu.RectTransform, GUI.Anchor.Center),
+                                       "", GUI.Alignment.Center, nil)  --кнопка закрыть всё
         closeButton.OnClicked = function ()
             MainMenu.Visible = not MainMenu.Visible
         end
@@ -176,9 +185,11 @@ else
 
         menuContent.RectTransform.RelativeOffset = Vector2(0, 0.1)
 
-        local menuH = GUI.ListBox(GUI.RectTransform(Vector2(1, 1), menuContent.RectTransform, GUI.Anchor.BottomCenter), true, Color(0,0,0,0), nil) -- содержимое горизонталь
+        local menuH = GUI.ListBox(GUI.RectTransform(Vector2(1, 1), menuContent.RectTransform, GUI.Anchor.BottomCenter),
+                                  true, Color(0,0,0,0), nil) -- содержимое горизонталь
 
-        local imageFrame = GUI.Frame(GUI.RectTransform(Point(100, 100), menuH.Content.RectTransform, GUI.Anchor.CenterLeft), "GUITextBox", Color(0,0,0,0), "InnerFrame")  ---иконка
+        local imageFrame = GUI.Frame(GUI.RectTransform(Point(100, 100), menuH.Content.RectTransform, GUI.Anchor.CenterLeft),
+                                     "GUITextBox", Color(0,0,0,0), "InnerFrame")  ---иконка
         imageFrame.RectTransform.RelativeOffset = Vector2(0.062, 0)
 
         local sprite = FocusedItem.Prefab.InventoryIcon
@@ -192,13 +203,15 @@ else
         imageFrame.CanBeFocused = false
 
         --правая часть
-        local menuHV = GUI.ListBox(GUI.RectTransform(Vector2(0.6, 0.9), menuH.Content.RectTransform, GUI.Anchor.CenterLeft), false, Color(0,0,0,150), "InnerFrame") -- содержимое вертикаль
+        local menuHV = GUI.ListBox(GUI.RectTransform(Vector2(0.6, 0.9), menuH.Content.RectTransform, GUI.Anchor.CenterLeft),
+                                   false, Color(0,0,0,150), "InnerFrame") -- содержимое вертикаль
         menuHV.Color = Color(0,0,0,0)
         menuHV.HoverColor = Color(0,0,0,0)
         menuHV.RectTransform.RelativeOffset = Vector2(0.058, 0)
 
         --Крутилки
-        local menuHVH0 = GUI.ListBox(GUI.RectTransform(Vector2(1, 0.33), menuHV.Content.RectTransform, GUI.Anchor.TopCenter), true, Color(0,0,0,0), nil) -- содержимое вертикаль
+        local menuHVH0 = GUI.ListBox(GUI.RectTransform(Vector2(1, 0.33), menuHV.Content.RectTransform, GUI.Anchor.TopCenter),
+                                     true, Color(0,0,0,0), nil) -- содержимое вертикаль
         menuHVH0.RectTransform.RelativeOffset = Vector2(0.018, 0.06)
         menuHVH0.Padding = Vector4(0, 0, 0, 0)
         menuHVH0.Spacing = 3
@@ -206,7 +219,8 @@ else
         menuHVH0.CanBeFocused = false
 
         if RIBAMover.Settings.Check("ChangeOfDepth") then
-            local depthInput = GUI.NumberInput(GUI.RectTransform(Vector2(RIBAMover.Settings.Check("Rotation") and 0.46 or 0.95, 0.5), menuHVH0.Content.RectTransform), NumberType.Int) -- крутилка
+            local depthInput = GUI.NumberInput(GUI.RectTransform(Vector2(RIBAMover.Settings.Check("Rotation") and 0.46 or 0.95, 0.5),
+                                               menuHVH0.Content.RectTransform), NumberType.Int) -- крутилка
             depthInput.MinValueInt = 001
             depthInput.MaxValueInt = 899
             depthInput.valueStep = 10
@@ -219,7 +233,8 @@ else
             end
         end
         if RIBAMover.Settings.Check("Rotation") then
-            local degreesInput = GUI.NumberInput(GUI.RectTransform(Vector2(RIBAMover.Settings.Check("ChangeOfDepth") and 0.46 or 0.95, 0.4), menuHVH0.Content.RectTransform), NumberType.Int) -- крутилка
+            local degreesInput = GUI.NumberInput(GUI.RectTransform(Vector2(RIBAMover.Settings.Check("ChangeOfDepth") and 0.46 or 0.95, 0.4),
+                                                 menuHVH0.Content.RectTransform), NumberType.Int) -- крутилка
             degreesInput.MinValueInt = 000
             degreesInput.MaxValueInt = 360
             degreesInput.valueStep = 1
@@ -234,17 +249,20 @@ else
 
         if RIBAMover.Settings.Check("Flipping") then
             --Отражалки
-            local menuHVH1 = GUI.ListBox(GUI.RectTransform(Vector2(0.95, 0.2), menuHV.Content.RectTransform, GUI.Anchor.TopCenter), true, Color(0,0,0,0), nil) -- содержимое вертикаль
+            local menuHVH1 = GUI.ListBox(GUI.RectTransform(Vector2(0.95, 0.2), menuHV.Content.RectTransform, GUI.Anchor.TopCenter),
+                                         true, Color(0,0,0,0), nil) -- содержимое вертикаль
             menuHVH1.Color = Color(0,0,0,0)
             menuHVH1.HoverColor = Color(0,0,0,0)
             menuHVH1.Padding = Vector4(0, 0, 0, 0)
             menuHVH1.CanBeFocused = false
 
-            local FlipXButton = GUI.Button(GUI.RectTransform(Vector2(0.5, 1), menuHVH1.Content.RectTransform), "FlipX", GUI.Alignment.Center, "GUIButtonSmall")
+            local FlipXButton = GUI.Button(GUI.RectTransform(Vector2(0.5, 1), menuHVH1.Content.RectTransform),
+                                           "FlipX", GUI.Alignment.Center, "GUIButtonSmall")
             FlipXButton.OnClicked = function ()
                 RIBAMover.flipAttached(true, FocusedItem)
             end
-            local FlipXButton = GUI.Button(GUI.RectTransform(Vector2(0.5, 1), menuHVH1.Content.RectTransform), "FlipY", GUI.Alignment.Center, "GUIButtonSmall")
+            local FlipXButton = GUI.Button(GUI.RectTransform(Vector2(0.5, 1), menuHVH1.Content.RectTransform),
+                                           "FlipY", GUI.Alignment.Center, "GUIButtonSmall")
             FlipXButton.OnClicked = function ()
                 RIBAMover.flipAttached(false, FocusedItem)
             end
@@ -266,11 +284,13 @@ else
             rightButton.OnClicked = function ()
                 RIBAMover.moveAttached(10,0,FocusedItem)
             end
-            local upButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "U", GUI.Alignment.Center, "GUIButtonSmall")
+            local upButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), 
+                                        "U", GUI.Alignment.Center, "GUIButtonSmall")
             upButton.OnClicked = function ()
                 RIBAMover.moveAttached(0,10,FocusedItem)
             end
-            local downButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "D", GUI.Alignment.Center, "GUIButtonSmall")
+            local downButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), 
+                                          "D", GUI.Alignment.Center, "GUIButtonSmall")
             downButton.OnClicked = function ()
                 RIBAMover.moveAttached(0,-10,FocusedItem)
             end
@@ -312,15 +332,14 @@ else
 
             local owner = item.ParentInventory and item.ParentInventory.Owner
             if owner~=nil then
-                isMoverInHands = false
+                IsMoverInHands = false
                 for k,v in owner.HeldItems do
                     if item.Prefab.Identifier.Value == k.Prefab.Identifier.Value then
-                        isMoverInHands = true
+                        IsMoverInHands = true
                     end
                 end
                 local distance = RIBAMover.CalculateDistance(owner.WorldPosition, FocusedItem.WorldPosition)
-                
-                if distance > 200 or not isMoverInHands then
+                if distance > item.InteractDistance or not IsMoverInHands then
                     MainMenu.Visible = false
                 end
             -- else
@@ -332,13 +351,15 @@ else
 end
 
 Hook.Add("RIBAMoverOnUse", "RIBAMoverOnUse", function(statusEffect, delta, item) --включить интерфейс
-    RIBAMover.Settings.Update(function()
-        if CLIENT then
-            FocusedItem = Character.Controlled.FocusedItem
-            if FocusedItem~=nil and RIBAMover.EditableCheck(FocusedItem) then
-                RIBAMover.decoratorUI(FocusedItem)
+    if RIBAMover.ItemOwnerIsPlayer(item) then
+        RIBAMover.Settings.Update(function()
+            if CLIENT then
+                FocusedItem = Character.Controlled.FocusedItem
+                if FocusedItem~=nil and RIBAMover.EditableCheck(FocusedItem) then
+                    RIBAMover.decoratorUI(FocusedItem)
+                end
             end
-        end
-    end)
+        end)
+    end
 end)
 

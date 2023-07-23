@@ -1,6 +1,15 @@
-local ValidArguments = {"EditNotAttachableItems","EditMachines","EditDoors","EditLadders","Rotation","ChangeOfDepth","Flipping","Movement"}
+local ValidArguments = {"EditNotAttachableItems","EditMachines","EditDoors","EditLadders","EditReactors","Rotation","ChangeOfDepth","Flipping","Movement"}
 
-Game.AddCommand("ribamoverset", "[option] [true/false] . Options: ".. table.concat(ValidArguments, ", ") ..".", function (args)
+Game.AddCommand("ribamoverset", "[option] [true/false] . Options: ".. table.concat(ValidArguments, ", ") ..".", function (client, args)
+
+    -- if CLIENT then print("Я не СУщаеСТВую") else print ("ясуществую))") end
+    
+    -- if not client.HasPermission(ClientPermissions.ConsoleCommands) then
+    --     print ("you not permited to use console commands")
+    --     return
+    -- else
+    --     print("ololo")
+    -- end
 
     if args[2] ~= "false" and args[2] ~= "true" then
         print("bad arguments")
@@ -18,7 +27,6 @@ Game.AddCommand("ribamoverset", "[option] [true/false] . Options: ".. table.conc
     end
     print("bad arguments")
     
-    -- sender.HasPermission(0x80)
 end, function() return {ValidArguments} end)
 
 Game.AddCommand("ribamoverlist", "Shows the current settings of the RIBA Mover.", function (args)
