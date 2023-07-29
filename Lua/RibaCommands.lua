@@ -15,7 +15,7 @@ Game.AssignOnClientRequestExecute("ribamoverset", function(client, cursor, args)
 
     if not Game.RoundStarted then return end
 
-    if not RIBAMover.BitCheck(client.Permissions,128) then
+    if not RIBAMover.BitCheck(client.Permissions,128)>0 then
         RIBAMover.PersonalMessage(client.Name, "You`re not permitted to use console commands")
     end
 
@@ -34,7 +34,7 @@ Game.AssignOnClientRequestExecute("ribamoverset", function(client, cursor, args)
             return
         end
     end
-    
+
     RIBAMover.PersonalMessage(client.Name,"bad arguments\nReference: ribamoverset [option] [true/false]\nOptions: "..
                               table.concat(ValidArguments, ", "))
 end)
