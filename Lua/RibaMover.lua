@@ -349,7 +349,6 @@ else
                 
                 if item.ParentInventory == nil then return end
                 local owner = item.ParentInventory.Owner
-                print (owner.Name)
                 if owner~=nil then
                     IsMoverInHands = false
                     for k,v in owner.HeldItems do

@@ -109,7 +109,7 @@ end
 RIBAMover.ItemOwnerIsPlayer = function(item)
     if CLIENT then
         OwnerName = item.GetRootInventoryOwner().Name
-        if OwnerName == Character.Controlled then
+        if OwnerName == Character.Controlled.Name then
             return true
         end
     end
