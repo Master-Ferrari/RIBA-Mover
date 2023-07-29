@@ -1,10 +1,3 @@
--- Hook.Add("roundStart", "aaaaaaa", function()
---     for _, client in pairs(Client.ClientList) do
---         RIBAMover.Character = client.Character
---         break
---     end
--- end)
-
 RIBAMover.Component = function(item, name)
     for _, component in ipairs(item.Components) do
         if component.Name == name then
@@ -116,10 +109,47 @@ end
 RIBAMover.ItemOwnerIsPlayer = function(item)
     if CLIENT then
         OwnerName = item.GetRootInventoryOwner().Name
-        UserName = Character.Controlled.Name
-        if OwnerName == UserName then
+        if OwnerName == Character.Controlled then
             return true
         end
     end
     return false
+end
+
+RIBAMover.BitCheck = function(a, b)
+    local result = 0
+    local bit_position = 1
+    while a > 0 and b > 0 do
+        local bit_a = a % 2
+        local bit_b = b % 2
+        if bit_a == 1 and bit_b == 1 then
+            result = result + bit_position
+        end
+        a = math.floor(a / 2)
+        b = math.floor(b / 2)
+        bit_position = bit_position * 2
+    end
+    return result
+end
+
+RIBAMover.PersonalMessage = function(clientName, MSG)
+    if Game.IsSingleplayer or CLIENT then
+        print(MSG)
+    else 
+        local netMsg = Networking.Start("PersonalMSG");
+        netMsg.WriteString(clientName)
+        netMsg.WriteString(MSG)
+        Networking.Send(netMsg)
+    end
+end
+
+if CLIENT then
+    Networking.Receive("PersonalMSG", function(msg, sender)
+        
+        -- local clientName = msg.ReadString()
+        if Game.RoundStarted and Character.Controlled.Name == msg.ReadString() then
+            print(msg.ReadString())
+        end
+
+    end)
 end

@@ -1,27 +1,27 @@
-local ValidArguments = {"EditNotAttachableItems","EditMachines","EditDoors","EditLadders","EditReactors","Rotation","ChangeOfDepth","Flipping","Movement"}
+local ValidArguments = {"EditNotAttachableItems","EditMachines","EditDoors","EditLadders","EditReactors",
+                        "Rotation","ChangeOfDepth","Flipping","Movement"}
+
+Game.AddCommand("ribamoverlist", "Shows the current settings of the RIBA Mover.", function (args) 
+    print("You`re not permitted to use the command \"ribamoverlist\"")
+end, function() return {""} end)
 
 Game.AddCommand("ribamoverset", "[option] [true/false] . Options: ".. table.concat(ValidArguments, ", ") ..".", function (args)
+    print("You`re not permitted to use the command \"ribamoverset\"")
+end, function() return {ValidArguments} end)
 
-    if CLIENT then return end
-    
-    -- if not client.HasPermission(ClientPermissions.ConsoleCommands) then
-    --     print ("you not permited to use console commands")
-    --     return
-    -- else
-    --     print("ololo")
-    -- end
+if CLIENT then return end -----------------------------------------------------------------------------------------------------
 
-    -- print("yfgbpltk "..table.concat(args, ", "))
+Game.AssignOnClientRequestExecute("ribamoverset", function(client, cursor, args) 
 
+    if not Game.RoundStarted then return end
 
-
-    --как разделить дистанцию и активацию интерфейса на разных клиентах
-
-    --надо ограничить всё клиентом и отправлять команды на сервер нетворком
-
+    if not RIBAMover.BitCheck(client.Permissions,128) then
+        RIBAMover.PersonalMessage(client.Name, "You`re not permitted to use console commands")
+    end
 
     if args[2] ~= "false" and args[2] ~= "true" then
-        print("bad arguments")
+        RIBAMover.PersonalMessage(client.Name,"bad arguments\nReference: ribamoverset [option] [true/false]\nOptions: "
+                                  .. table.concat(ValidArguments, ", "))
         return
     end
     
@@ -30,18 +30,19 @@ Game.AddCommand("ribamoverset", "[option] [true/false] . Options: ".. table.conc
             RIBAMover.Settings.ReadJSON()
             RIBAMover.Settings.Local[tostring(args[1])] = args[2]=="true"
             RIBAMover.Settings.WriteJSON()
-            print(args[1].." is "..args[2])
+            RIBAMover.PersonalMessage(client.Name,args[1].." is "..args[2])
             return
         end
     end
-    print("bad arguments")
     
-end, function() return {ValidArguments} end)
+    RIBAMover.PersonalMessage(client.Name,"bad arguments\nReference: ribamoverset [option] [true/false]\nOptions: "..
+                              table.concat(ValidArguments, ", "))
+end)
 
-Game.AddCommand("ribamoverlist", "Shows the current settings of the RIBA Mover.", function (args)
+Game.AssignOnClientRequestExecute("ribamoverlist", function(client, cursor, args) 
     RIBAMover.Settings.Update(function()
         for k,v in pairs(RIBAMover.Settings.Local)do
-            print(tostring(k).." is "..tostring(v))
+            RIBAMover.PersonalMessage(client.Name,tostring(k).." is "..tostring(v))
         end
     end)
 end)
