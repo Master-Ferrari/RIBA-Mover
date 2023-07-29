@@ -342,27 +342,31 @@ else
 
 
     Hook.Add("RIBAMoverAlways", "RIBAMoverAlways", function(effect, deltaTime, item, targets, worldPosition) --отключить если далеко
+        
+        
         if FocusedItem~=nil and MainMenu.Visible then
---item.ParentInventory and 
-            if item.ParentInventory == nil then return end
-            local owner = item.ParentInventory.Owner
-            print (owner.Name)
-            if owner~=nil then
-                IsMoverInHands = false
-                for k,v in owner.HeldItems do
-                    if item.Prefab.Identifier.Value == k.Prefab.Identifier.Value then
-                        IsMoverInHands = true
+            if RIBAMover.ItemOwnerIsPlayer(item) or Game.IsSingleplayer then
+                
+                if item.ParentInventory == nil then return end
+                local owner = item.ParentInventory.Owner
+                print (owner.Name)
+                if owner~=nil then
+                    IsMoverInHands = false
+                    for k,v in owner.HeldItems do
+                        if item.Prefab.Identifier.Value == k.Prefab.Identifier.Value then
+                            IsMoverInHands = true
+                        end
                     end
+                    local distance = RIBAMover.CalculateDistance(owner.WorldPosition, FocusedItem.WorldPosition)
+                    if distance > item.InteractDistance or not IsMoverInHands then
+                        MainMenu.Visible = false
+                    end
+                    
                 end
-                local distance = RIBAMover.CalculateDistance(owner.WorldPosition, FocusedItem.WorldPosition)
-                if distance > item.InteractDistance or not IsMoverInHands then
-                    MainMenu.Visible = false
-                end
-            -- else
-            --     MainMenu.Visible = false
             end
         end
     end)
+
 
 end
 

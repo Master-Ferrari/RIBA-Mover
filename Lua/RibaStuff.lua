@@ -56,16 +56,6 @@ RIBAMover.CalculateDistance = function(frst, scnd)
     return distance
 end
 
-RIBAMover.FindClientCharacter = function(character)
-    if CLIENT then return nil end
-    
-    for key, value in pairs(Client.ClientList) do
-        if value.Character == character then
-            return value
-        end
-    end
-end
-
 RIBAMover.SplitString = function (inputString, delimiter)
     local result = {}  -- Результирующая таблица строк
     local startIndex = 1
@@ -126,12 +116,9 @@ end
 RIBAMover.ItemOwnerIsPlayer = function(item)
     if CLIENT then
         OwnerName = item.GetRootInventoryOwner().Name
-        for player in Client.ClientList do
-            if player.Name == OwnerName or player.SteamID == OwnerName then
-                print(player.Name.." - ЯЯЯ")
-                print(Client.Character.Name.." - ЫЫЫ")
-                return true
-            end
+        UserName = Character.Controlled.Name
+        if OwnerName == UserName then
+            return true
         end
     end
     return false
