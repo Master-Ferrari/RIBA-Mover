@@ -117,6 +117,7 @@ RIBAMover.ItemOwnerIsPlayer = function(item)
 end
 
 RIBAMover.BitCheck = function(a, b)
+    local bbb = b
     local result = 0
     local bit_position = 1
     while a > 0 and b > 0 do
@@ -129,7 +130,7 @@ RIBAMover.BitCheck = function(a, b)
         b = math.floor(b / 2)
         bit_position = bit_position * 2
     end
-    return result
+    return result == bbb
 end
 
 RIBAMover.PersonalMessage = function(clientName, MSG)
