@@ -1,3 +1,10 @@
+-- Hook.Add("roundStart", "aaaaaaa", function()
+--     for _, client in pairs(Client.ClientList) do
+--         RIBAMover.Character = client.Character
+--         break
+--     end
+-- end)
+
 RIBAMover.Component = function(item, name)
     for _, component in ipairs(item.Components) do
         if component.Name == name then
@@ -121,7 +128,8 @@ RIBAMover.ItemOwnerIsPlayer = function(item)
         OwnerName = item.GetRootInventoryOwner().Name
         for player in Client.ClientList do
             if player.Name == OwnerName or player.SteamID == OwnerName then
-                -- print(player.Name.." - владелец")
+                print(player.Name.." - ЯЯЯ")
+                print(Client.Character.Name.." - ЫЫЫ")
                 return true
             end
         end

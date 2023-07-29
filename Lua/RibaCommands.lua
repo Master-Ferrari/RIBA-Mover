@@ -1,8 +1,8 @@
 local ValidArguments = {"EditNotAttachableItems","EditMachines","EditDoors","EditLadders","EditReactors","Rotation","ChangeOfDepth","Flipping","Movement"}
 
-Game.AddCommand("ribamoverset", "[option] [true/false] . Options: ".. table.concat(ValidArguments, ", ") ..".", function (client, args)
+Game.AddCommand("ribamoverset", "[option] [true/false] . Options: ".. table.concat(ValidArguments, ", ") ..".", function (args)
 
-    -- if CLIENT then print("Я не СУщаеСТВую") else print ("ясуществую))") end
+    if CLIENT then return end
     
     -- if not client.HasPermission(ClientPermissions.ConsoleCommands) then
     --     print ("you not permited to use console commands")
@@ -11,11 +11,20 @@ Game.AddCommand("ribamoverset", "[option] [true/false] . Options: ".. table.conc
     --     print("ololo")
     -- end
 
+    -- print("yfgbpltk "..table.concat(args, ", "))
+
+
+
+    --как разделить дистанцию и активацию интерфейса на разных клиентах
+
+    --надо ограничить всё клиентом и отправлять команды на сервер нетворком
+
+
     if args[2] ~= "false" and args[2] ~= "true" then
         print("bad arguments")
         return
     end
-
+    
     for _, validArg in pairs(ValidArguments) do
         if args[1] == validArg then
             RIBAMover.Settings.ReadJSON()

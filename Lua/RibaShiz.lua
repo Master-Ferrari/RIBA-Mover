@@ -1,18 +1,29 @@
 RIBAMover.Shiz = {}
 
 RIBAMover.Shiz.Array = {  --fancy table. args types/functions
+
     move   = {{"String", "Int16", "Int16"},fn = function(ItemString, H, V) 
         local Item = Entity.FindEntityByID(tonumber(ItemString))
         Item.Move(Vector2(H, V), false)
     end},
 
-    flip   = {{"String", "Int16", "Int16"},fn = function(arg1)
+    flip   = {{"String", "Boolean"},fn = function(ItemString, X)
+        local Item = Entity.FindEntityByID(tonumber(ItemString))
+        if X then
+            Item.FlipX(false)
+        else
+            Item.FlipY(false)
+        end
     end},
 
-    depth  = {{"String", "Int16", "Int16"},fn = function(arg1)
+    depth  = {{"String", "Int16"},fn = function(ItemString, newDepth)
+        local Item = Entity.FindEntityByID(tonumber(ItemString))
+        Item.SpriteDepth = math.round(newDepth/1000.0, 3)
     end},
 
-    rotate = {{"String", "Int16", "Int16"},fn = function(arg1)
+    rotate = {{"String", "Int16"},fn = function(ItemString, newRotate)
+        local Item = Entity.FindEntityByID(tonumber(ItemString))
+        Item.Rotation = newRotate
     end}
 }
 
@@ -21,14 +32,14 @@ RIBAMover.Shiz.Do = function(funcName, args)
     if (Game.IsSingleplayer) then
         RIBAMover.Shiz.Array[funcName].fn(table.unpack(args))
     else
-        print("клиент говорит серверу:")
+        -- print("клиент говорит серверу:")
         local netMsg = Networking.Start("ShizMSG");
         --first arg is name of target function, others is others
         netMsg.WriteString(funcName) 
         for _, arg in ipairs(args) do
 
             local argType = type(arg)
-            print(arg.." это "..argType)
+            -- print(arg.." это "..argType)
             if argType == "number" then
                 netMsg.WriteInt16(arg)
             elseif argType == "string" then
@@ -36,7 +47,7 @@ RIBAMover.Shiz.Do = function(funcName, args)
             elseif argType == "boolean" then
                 netMsg.WriteBoolean(arg)
             else
-                print("жопа")
+                -- print("жопа")
             end
             
         end
@@ -48,13 +59,13 @@ end
 if SERVER then
     Hook.Add("loaded", "Shiza", function()
         Networking.Receive("ShizMSG", function(msg, sender)
-            print("Привет, клиент! Я сервер!")
+            -- print("Привет, клиент! Я сервер!")
             local funcName = msg.ReadString()
             
             local argsTable = {}
             local shiza = RIBAMover.Shiz.Array[funcName]
 
-            print("ты сказал мне что в "..funcName.." мы отправим это:")
+            -- print("ты сказал мне что в "..funcName.." мы отправим это:")
             for _, type in ipairs(shiza[1]) do
                 
                 if type == "Int16" then
@@ -66,11 +77,10 @@ if SERVER then
                 end
             end
 
-            for _, value in pairs(argsTable) do
-                print(value) end
+            -- for _, value in pairs(argsTable) do print(value) end
 
 
-            print("а теперь слушай ты, клиент!")
+            -- print("а теперь слушай ты, клиент!")
             local netMsg = Networking.Start("2ShizMSG2");
             --send instructions to clients
             netMsg.WriteString(funcName) 
@@ -83,7 +93,7 @@ if SERVER then
                 elseif argType == "boolean" then
                     netMsg.WriteBoolean(arg)
                 end
-                print(arg.." это2 "..argType)
+                -- print(arg.." это2 "..argType)
             end
             Networking.Send(netMsg)
 
@@ -98,10 +108,10 @@ if CLIENT then
         Networking.Receive("2ShizMSG2", function(msg, sender)
             local funcName = msg.ReadString()
             
-            print("Привет, клиент и сервер! Я клиент!")
+            -- print("Привет, клиент и сервер! Я клиент!")
             local argsTable = {}
             local shiza = RIBAMover.Shiz.Array[funcName]
-            print("ВЫ сказали мне что в "..funcName.." мы отправим это:")
+            -- print("ВЫ сказали мне что в "..funcName.." мы отправим это:")
             for _, type in ipairs(shiza[1]) do
                 
                 if type == "Int16" then
@@ -111,7 +121,7 @@ if CLIENT then
                 elseif type == "Boolean" then
                     table.insert(argsTable, msg.ReadBoolean())
                 end
-                print(type.." оказался2 "..argsTable[#argsTable])
+                -- print(type.." оказался2 "..argsTable[#argsTable])
                 
             end
 

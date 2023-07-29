@@ -62,105 +62,105 @@ end
 
 if SERVER then
 
-    Hook.Add("loaded", "RIBAMove", function()
-        Networking.Receive("MoveMSG", function(msg, sender)
-            local Item = Entity.FindEntityByID(tonumber(msg.ReadString()))
-            local H = msg.ReadInt16()
-            local V = msg.ReadInt16()
-            Item.Move(Vector2(H, V), false)
-        end)
-    end)
+--     Hook.Add("loaded", "RIBAMove", function()
+--         Networking.Receive("MoveMSG", function(msg, sender)
+--             local Item = Entity.FindEntityByID(tonumber(msg.ReadString()))
+--             local H = msg.ReadInt16()
+--             local V = msg.ReadInt16()
+--             Item.Move(Vector2(H, V), false)
+--         end)
+--     end)
 
-    Hook.Add("loaded", "RIBAFlip", function()
-        Networking.Receive("FlipMSG", function(msg, sender)
-            local Item = Entity.FindEntityByID(tonumber(msg.ReadString()))
-            local X = msg.ReadBoolean()
-            if X then
-                Item.FlipX(false)
-            else
-                Item.FlipY(false)
-            end
-        end)
-    end)
+--     Hook.Add("loaded", "RIBAFlip", function()
+--         Networking.Receive("FlipMSG", function(msg, sender)
+--             local Item = Entity.FindEntityByID(tonumber(msg.ReadString()))
+--             local X = msg.ReadBoolean()
+--             if X then
+--                 Item.FlipX(false)
+--             else
+--                 Item.FlipY(false)
+--             end
+--         end)
+--     end)
 
-    Hook.Add("loaded", "RIBADepth", function()
-        Networking.Receive("DepthMSG", function(msg, sender)
-            local Item = Entity.FindEntityByID(tonumber(msg.ReadString()))
-            local newDepth = msg.ReadInt16()
-            Item.SpriteDepth = newDepth
-        end)
-    end)
+--     Hook.Add("loaded", "RIBADepth", function()
+--         Networking.Receive("DepthMSG", function(msg, sender)
+--             local Item = Entity.FindEntityByID(tonumber(msg.ReadString()))
+--             local newDepth = msg.ReadInt16()
+--             Item.SpriteDepth = newDepth
+--         end)
+--     end)
 
-    Hook.Add("loaded", "RIBARotate", function()
-        Networking.Receive("RotateMSG", function(msg, sender)
-            local Item = Entity.FindEntityByID(tonumber(msg.ReadString()))
-            local newRotate = msg.ReadInt16()
-            Item.Rotation = newRotate
-        end)
-    end)
+--     Hook.Add("loaded", "RIBARotate", function()
+--         Networking.Receive("RotateMSG", function(msg, sender)
+--             local Item = Entity.FindEntityByID(tonumber(msg.ReadString()))
+--             local newRotate = msg.ReadInt16()
+--             Item.Rotation = newRotate
+--         end)
+--     end)
 
     -- return
 -- end
 
 else
 
-    RIBAMover.RotateAttached = function(value, Item)
-        if true then
-            if (not Game.IsSingleplayer) then
-                local netMsg = Networking.Start("RotateMSG");
-                netMsg.WriteString(tostring(Item.ID))
-                netMsg.WriteInt16(value)
-                Networking.Send(netMsg)
-            end
-            FocusedItem.Rotation = value
-        end
-    end
+    -- RIBAMover.RotateAttached = function(value, Item)
+    --     if true then
+    --         if (not Game.IsSingleplayer) then
+    --             local netMsg = Networking.Start("RotateMSG");
+    --             netMsg.WriteString(tostring(Item.ID))
+    --             netMsg.WriteInt16(value)
+    --             Networking.Send(netMsg)
+    --         end
+    --         FocusedItem.Rotation = value
+    --     end
+    -- end
 
-    RIBAMover.DepthAttached = function(value, Item)
-        if true then
-            local newSpriteDepth = math.round(value/1000.0, 3)
-            if (not Game.IsSingleplayer) then
-                local netMsg = Networking.Start("DepthMSG");
-                netMsg.WriteString(tostring(Item.ID))
-                netMsg.WriteInt16(newSpriteDepth)
-                Networking.Send(netMsg)
-            end
-            FocusedItem.SpriteDepth = newSpriteDepth
-        end
-    end
+    -- RIBAMover.DepthAttached = function(value, Item)
+    --     if true then
+    --         local newSpriteDepth = math.round(value/1000.0, 3)
+    --         if (not Game.IsSingleplayer) then
+    --             local netMsg = Networking.Start("DepthMSG");
+    --             netMsg.WriteString(tostring(Item.ID))
+    --             netMsg.WriteInt16(newSpriteDepth)
+    --             Networking.Send(netMsg)
+    --         end
+    --         FocusedItem.SpriteDepth = newSpriteDepth
+    --     end
+    -- end
 
-    RIBAMover.moveAttached = function(H, V, Item)
-        if (Game.IsSingleplayer) then
-            Item.Move(Vector2(H, V), false)
-        else
-            local netMsg = Networking.Start("MoveMSG");
-            netMsg.WriteString(tostring(Item.ID))
-            netMsg.WriteInt16(H)
-            netMsg.WriteInt16(V)
-            Networking.Send(netMsg)
-            Item.Move(Vector2(H, V), false)
-        end
-    end
+    -- RIBAMover.moveAttached = function(H, V, Item)
+    --     if (Game.IsSingleplayer) then
+    --         Item.Move(Vector2(H, V), false)
+    --     else
+    --         local netMsg = Networking.Start("MoveMSG");
+    --         netMsg.WriteString(tostring(Item.ID))
+    --         netMsg.WriteInt16(H)
+    --         netMsg.WriteInt16(V)
+    --         Networking.Send(netMsg)
+    --         Item.Move(Vector2(H, V), false)
+    --     end
+    -- end
 
-    RIBAMover.flipAttached = function(X, Item)
-        if (Game.IsSingleplayer) then
-            if X then
-                Item.FlipX(false)
-            else
-                Item.FlipY(false)
-            end
-        else
-            local netMsg = Networking.Start("FlipMSG");
-            netMsg.WriteString(tostring(Item.ID))
-            netMsg.WriteBoolean(X)
-            Networking.Send(netMsg)
-            if X then
-                Item.FlipX(false)
-            else
-                Item.FlipY(false)
-            end
-        end
-    end
+    -- RIBAMover.flipAttached = function(X, Item)
+    --     if (Game.IsSingleplayer) then
+    --         if X then
+    --             Item.FlipX(false)
+    --         else
+    --             Item.FlipY(false)
+    --         end
+    --     else
+    --         local netMsg = Networking.Start("FlipMSG");
+    --         netMsg.WriteString(tostring(Item.ID))
+    --         netMsg.WriteBoolean(X)
+    --         Networking.Send(netMsg)
+    --         if X then
+    --             Item.FlipX(false)
+    --         else
+    --             Item.FlipY(false)
+    --         end
+    --     end
+    -- end
 
 
     -- our main frame where we will put our custom GUI
@@ -229,7 +229,8 @@ else
                 depthInput.IntValue = depthInt
             end
             depthInput.OnValueChanged = function ()
-                RIBAMover.DepthAttached(depthInput.IntValue, FocusedItem)
+                -- RIBAMover.DepthAttached(depthInput.IntValue, FocusedItem)
+                RIBAMover.Shiz.Do("depth", {tostring(FocusedItem.ID),depthInput.IntValue})
             end
         end
         if RIBAMover.Settings.Check("Rotation") then
@@ -243,7 +244,8 @@ else
                 degreesInput.IntValue = degreesInt
             end
             degreesInput.OnValueChanged = function ()
-                RIBAMover.RotateAttached(degreesInput.IntValue, FocusedItem)
+                -- RIBAMover.RotateAttached(degreesInput.IntValue, FocusedItem)
+                RIBAMover.Shiz.Do("rotate", {tostring(FocusedItem.ID),degreesInput.IntValue})
             end
         end
 
@@ -259,12 +261,14 @@ else
             local FlipXButton = GUI.Button(GUI.RectTransform(Vector2(0.5, 1), menuHVH1.Content.RectTransform),
                                            "FlipX", GUI.Alignment.Center, "GUIButtonSmall")
             FlipXButton.OnClicked = function ()
-                RIBAMover.flipAttached(true, FocusedItem)
+                RIBAMover.Shiz.Do("flip", {tostring(FocusedItem.ID),true})
+                -- RIBAMover.flipAttached(true, FocusedItem)
             end
             local FlipXButton = GUI.Button(GUI.RectTransform(Vector2(0.5, 1), menuHVH1.Content.RectTransform),
                                            "FlipY", GUI.Alignment.Center, "GUIButtonSmall")
             FlipXButton.OnClicked = function ()
-                RIBAMover.flipAttached(false, FocusedItem)
+                RIBAMover.Shiz.Do("flip", {tostring(FocusedItem.ID),false})
+                -- RIBAMover.flipAttached(false, FocusedItem)
             end
         end
 
@@ -310,19 +314,23 @@ else
 
             local leftButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "l", GUI.Alignment.Center, "GUIButtonSmall")
             leftButton.OnClicked = function ()
-                RIBAMover.moveAttached(-1,0,FocusedItem)
+                RIBAMover.Shiz.Do("move", {tostring(FocusedItem.ID),-1,0})
+                -- RIBAMover.moveAttached(-1,0,FocusedItem)
             end
             local rightButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "r", GUI.Alignment.Center, "GUIButtonSmall")
             rightButton.OnClicked = function ()
-                RIBAMover.moveAttached(1,0,FocusedItem)
+                RIBAMover.Shiz.Do("move", {tostring(FocusedItem.ID),1,0})
+                -- RIBAMover.moveAttached(1,0,FocusedItem)
             end
             local upButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "u", GUI.Alignment.Center, "GUIButtonSmall")
             upButton.OnClicked = function ()
-                RIBAMover.moveAttached(0,1,FocusedItem)
+                RIBAMover.Shiz.Do("move", {tostring(FocusedItem.ID),0,1})
+                -- RIBAMover.moveAttached(0,1,FocusedItem)
             end
             local downButton = GUI.Button(GUI.RectTransform(Vector2(0.25, 1), menuHVH2.Content.RectTransform), "d", GUI.Alignment.Center, "GUIButtonSmall")
             downButton.OnClicked = function ()
-                RIBAMover.moveAttached(0,-1,FocusedItem)
+                RIBAMover.Shiz.Do("move", {tostring(FocusedItem.ID),0,-1})
+                -- RIBAMover.moveAttached(0,-1,FocusedItem)
             end
         end
         MainMenu.Visible = true
@@ -335,8 +343,10 @@ else
 
     Hook.Add("RIBAMoverAlways", "RIBAMoverAlways", function(effect, deltaTime, item, targets, worldPosition) --отключить если далеко
         if FocusedItem~=nil and MainMenu.Visible then
-
-            local owner = item.ParentInventory and item.ParentInventory.Owner
+--item.ParentInventory and 
+            if item.ParentInventory == nil then return end
+            local owner = item.ParentInventory.Owner
+            print (owner.Name)
             if owner~=nil then
                 IsMoverInHands = false
                 for k,v in owner.HeldItems do
