@@ -14,6 +14,7 @@ RIBAMover.Settings.ReadJSON = function ()
         RIBAMover.Settings.Local[key]=value==true
     end
 end
+
 --Request
 RIBAMover.Settings.Request = function ()
     if CLIENT then
@@ -22,6 +23,7 @@ RIBAMover.Settings.Request = function ()
         Networking.Send(netMsg)
     end
 end
+
 --Response
 if SERVER then
     Networking.Receive("SettingsRequestMSG", function(message, client)
@@ -32,7 +34,6 @@ if SERVER then
             count = count+1
         end
         netMsg.WriteInt16(count)
-        -- print(count)
         for key, value in pairs(RIBAMover.Settings.File) do
             netMsg.WriteString(tostring(key))
             netMsg.WriteBoolean(value==true)
@@ -40,10 +41,10 @@ if SERVER then
         Networking.Send(netMsg, client.Connection)
     end)
 end
+
 --Listen
 if CLIENT then
     Networking.Receive("SettingsResponseMSG", function(msg, sender)
-        -- print("ololo")
         RIBAMover.Settings.Local = {}
         local lenght = msg.ReadInt16()
         for i = 1, lenght do
