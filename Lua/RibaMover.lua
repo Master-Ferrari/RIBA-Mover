@@ -60,7 +60,7 @@ end
 
 
 
-if CLIENT then
+if not SERVER then
 
     -- our main frame where we will put our custom GUI
     local frame = GUI.Frame(GUI.RectTransform(Vector2(1, 1)), nil)  --full screen
