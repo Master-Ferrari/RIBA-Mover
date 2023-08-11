@@ -10,7 +10,7 @@ RIBAMover.EditableCheck = function(Item)
     if not RIBAMover.Settings.Check("EditNotAttachableItems") then
         local isAttachable = RIBAMover.GetAttributeValueFromItem(Item, "Holdable", "attachable")=="true"
         if isAttachable then
-            EditableErrorPrint(Item, "this item not detachable")
+            EditableErrorPrint(Item, "this item is attachable")
             return false
         end
     end

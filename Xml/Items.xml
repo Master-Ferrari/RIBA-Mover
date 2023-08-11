@@ -26,15 +26,15 @@
       </StatusEffect>
     </RangedWeapon>
 	
-    <Fabricate suitablefabricators="fabricator" requiredtime="30">
-      <RequiredSkill identifier="mechanical" level="65" />
+    <Fabricate suitablefabricators="fabricator" requiredtime="20">
+      <RequiredSkill identifier="mechanical" level="35" />
       <RequiredItem identifier="diamond" amount="1"/>
-      <RequiredItem identifier="energydrink" amount="2"/>
+      <RequiredItem identifier="energydrink" amount="1"/>
       <RequiredItem identifier="aluminium" amount="1"/>
     </Fabricate>
     <Deconstruct time="30">
       <Item identifier="diamond" amount="1"/>
-      <Item identifier="energydrink" amount="2" OutConditionMin="0.05" OutConditionMax="0.15"/>
+      <Item identifier="energydrink" amount="1" OutConditionMin="0.05" OutConditionMax="0.15"/>
       <Item identifier="aluminium" amount="1"/>
     </Deconstruct>
     <Price baseprice="499">
