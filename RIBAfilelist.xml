@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<contentpackage name="RIBA Mover" modversion="1.0" corepackage="False" steamworkshopid="3018655730" gameversion="1.0.21.0" altnames="RIBA Mover">
+  <Text file="%ModDir%/Localization/Ukrainian.xml" />
+  <Text file="%ModDir%/Localization/Russian.xml" />
+  <Text file="%ModDir%/Localization/English.xml" />
+  <Item file="%ModDir%/Xml/Items.xml" />
+  <Other file="%ModDir%/Lua/Autorun/init.lua" />
+  <Other file="%ModDir%/Lua/RibaCommands.lua" />
+  <Other file="%ModDir%/Lua/RibaSettings.lua" />
+  <Other file="%ModDir%/Lua/RibaShiz.lua" />
+  <Other file="%ModDir%/Lua/RibaStuff.lua" />
+  <Other file="%ModDir%/Lua/settings.json" />
+  <Other file="%ModDir%/Media/RIBAMover.png" />
+  <Other file="%ModDir%/Lua/settings.json" />
+</contentpackage>
